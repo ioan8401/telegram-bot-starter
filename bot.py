@@ -1,38 +1,28 @@
 import os
-import openai
 from telegram import Update
-from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filters
+from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler, filters
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+TOKEN = os.getenv("BOT_TOKEN")
 
-async def unicorn_friend(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_message = update.message.text
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Bună, eu sunt Unicornul prietenos! Întreabă-mă orice vrei!")
 
-    prompt = f"""
-Imaginează-ți că ești „Lumi”, un unicorn imaginar, prietenul magic al unei fetițe pe nume Elisa.
-Ea îți scrie întrebări sau gânduri, iar tu îi răspunzi cu iubire, blândețe și puțină magie.
-Vorbește pe înțelesul unui copil, cu fantezie, ca un prieten de încredere.
+async def get_chat_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = update.effective_chat.id
+    await update.message.reply_text(f"Chat ID-ul tău este: {chat_id}")
 
-Întrebarea sau mesajul Elisei: {user_message}
+async def unicorn_chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_message = update.message.text.lower()
+    response = f"Sunt Unicornul tău magic! Ai spus: „{user_message}” și mie îmi pare foarte interesant! Spune-mi mai multe!"
 
-Scrie un răspuns prietenos care începe cu „Hei Elisa, sunt eu, Lumi, unicornul tău magic!” și se termină cu „Cu sclipiri magice, al tău Lumi.”.
-"""
+    await update.message.reply_text(response)
 
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=300,
-        temperature=0.9,
-    )
+if __name__ == '__main__':
+    app = ApplicationBuilder().token(TOKEN).build()
 
-    reply = response["choices"][0]["message"]["content"].strip()
-    await update.message.reply_text(reply)
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("chatid", get_chat_id))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, unicorn_chat))
 
-if __name__ == "__main__":
-    telegram_token = os.getenv("TELEGRAM_TOKEN")
-    app = ApplicationBuilder().token("7384086918:AAHespaanBn6eHKRbeJQlLhxezHFngXyNI8").build()
-
-    app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), unicorn_friend))
-
-    print("Unicornul Lumi este activ...")
+    print("Botul rulează...")
     app.run_polling()
