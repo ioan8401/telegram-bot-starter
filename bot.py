@@ -18,7 +18,7 @@ async def unicorn_chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(response)
 
 if __name__ == '__main__':
-    app = ApplicationBuilder().token(TOKEN).build()
+    app = ApplicationBuilder().token("7384086918:AAHespaanBn6eHKRbeJQlLhxezHFngXyNI8").build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("chatid", get_chat_id))
