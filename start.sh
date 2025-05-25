@@ -1,3 +1,2 @@
-#!/bin/sh
-uv pip install -r requirements.txt
-uv run python bot.py
+pip install -r requirements.txt
+python bot.py
