@@ -30,7 +30,7 @@ Scrie un răspuns prietenos care începe cu „Hei Elisa, sunt eu, Lumi, unicorn
 
 if __name__ == "__main__":
     telegram_token = os.getenv("TELEGRAM_TOKEN")
-    app = ApplicationBuilder().token(telegram_token).build()
+    app = ApplicationBuilder().token(7384086918:AAHespaanBn6eHKRbeJQlLhxezHFngXyNI8).build()
 
     app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), unicorn_friend))
 
