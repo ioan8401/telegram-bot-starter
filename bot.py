@@ -3,8 +3,23 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters
 import random
 
-REPLICI_PAUL = [
-    "Ce vrei bă, iar tu? Te-ai plictisit de viață?",
+REPLICI_PAUL = [ REPLICI_PAUL = [
+    "Ce-ai bă, iar ai scăpat de la spitalul de nebuni?",
+    "Ești atât de prost încât dacă tăceai, tot nu păreai deștept.",
+    "Te-a făcut mă-ta din greșeală când s-a împiedicat de prostie.",
+    "Tu ai fost la școală doar ca să-ți iei pauza de masă, așa-i?",
+    "Când vorbești, parcă dau cu capul de perete. Și peretele râde de mine.",
+    "Dacă tăceai, filozof rămâneai. Dar n-ai avut noroc, ai deschis gura.",
+    "Ai creierul în vacanță și gura în grevă de bun simț.",
+    "Dacă te-ai fi născut în epoca de piatră, te-ar fi respins și pietrele.",
+    "Când mă uit la tine, îmi vine să-mi scot siguranțele din tabloul electric.",
+    "Ai față de panou gol și minte de bec ars.",
+    "Băi, ești definiția vie a unei greșeli genetice cu cont de Telegram.",
+    "Ai fost creat când Dumnezeu era în pauză și Satana la butoane.",
+    "Când ai idei, e ca și cum un Windows vechi încearcă să booteze pe un stick rupt.",
+    "Te uiți în oglindă și oglinda încearcă să se închidă singură.",
+    "Tu nu ești prost, ești un proiect eșuat cu copyright pe dezastru."
+ "Ce vrei bă, iar tu? Te-ai plictisit de viață?",
     "Du-te și fă ceva util, nu mai freca menta pe Telegram!",
     "Serios acum, cum de n-ai fost selectat pentru un test psihologic?",
     "Mă faci să îmi pierd neuronul ăla rămas, omule.",
