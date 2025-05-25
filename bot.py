@@ -1,41 +1,57 @@
 import os
 from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 import random
 
-REPLICI_PAUL = [
-    "Ce-ai bă, iar ai scăpat de la spitalul de nebuni?",
-    "Ești atât de prost încât dacă tăceai, tot nu păreai deștept.",
-    "Te-a făcut mă-ta din greșeală când s-a împiedicat de prostie.",
-    "Tu ai fost la școală doar ca să-ți iei pauza de masă, așa-i?",
-    "Când vorbești, parcă dau cu capul de perete. Și peretele râde de mine.",
-    "Dacă tăceai, filozof rămâneai. Dar n-ai avut noroc, ai deschis gura.",
-    "Ai creierul în vacanță și gura în grevă de bun simț.",
-    "Dacă te-ai fi născut în epoca de piatră, te-ar fi respins și pietrele.",
-    "Când mă uit la tine, îmi vine să-mi scot siguranțele din tabloul electric.",
-    "Ai față de panou gol și minte de bec ars.",
-    "Băi, ești definiția vie a unei greșeli genetice cu cont de Telegram.",
-    "Ai fost creat când Dumnezeu era în pauză și Satana la butoane.",
-    "Când ai idei, e ca și cum un Windows vechi încearcă să booteze pe un stick rupt.",
-    "Te uiți în oglindă și oglinda încearcă să se închidă singură.",
-    "Tu nu ești prost, ești un proiect eșuat cu copyright pe dezastru."
+REPLICI_UNICORN = [
+    "Hei, mică prințesă! Vrei să vorbim despre curcubeie?",
+    "Știai că astăzi unicornul Rozalia a zburat peste pădurea de vată de zahăr?",
+    "Zâmbetul tău face stelele să danseze!",
+    "Unicornella te îmbrățișează strâns cu sclipici!",
+    "Ți-ai pus azi coronița de curaj? Te stă minunat!",
+    "Vrei o poveste cu zâne, stele și un unicorn mov?",
+    "Astăzi e o zi perfectă pentru joacă și magie!",
 ]
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Salut. Eu sunt Paul. Nu mă enerva.")
 
-async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    mesaj = random.choice(REPLICI_PAUL)
+POVESTE = """
+A fost odată ca niciodată un unicorn pe nume Rozalia, care locuia pe un nor pufos roz. Într-o zi, a descoperit un curcubeu magic care ducea spre tărâmul înghețatei. Acolo a întâlnit o fetiță curajoasă care zâmbea mereu — se numea exact ca tine!
+"""
+
+GLUME = [
+    "Ce face un unicorn la școală? Învățătură de poveste!",
+    "Ce mănâncă unicornul la micul dejun? Fulgi de curcubeu!",
+    "Cum se joacă unicornul? Sare peste stele!",
+]
+
+STICKERE = [
+    "CAACAgIAAxkBAAEEDWxmVuOVh2Z6MHmpOWqMeNZB4DiHRAACXgADVp29CqgoqbgkQ9TgMAQ",  # Unicorn sticker
+    "CAACAgUAAxkBAAEEEVZmVxXeZIgLUzYo88a8I2V6A3whgAACFQMAAvcCyFbSKC4lST7uwDAE",  # Cute unicorn
+]
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Bunăăă! Eu sunt Unicornella, prietena ta magică! Scrie-mi orice sau încearcă /poveste, /gluma sau /curcubeu")
+
+async def raspuns(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    mesaj = random.choice(REPLICI_UNICORN)
     await update.message.reply_text(mesaj)
 
+async def poveste(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(POVESTE)
+
+async def gluma(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(random.choice(GLUME))
+
+async def curcubeu(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_sticker(random.choice(STICKERE))
+    await update.message.reply_text("Uuuu! Un curcubeu magic a apărut pentru tine!")
+
 if __name__ == '__main__':
-    from dotenv import load_dotenv
-    load_dotenv()
+    application = ApplicationBuilder().token(os.environ["TELEGRAM_BOT_TOKEN"]).build()
 
-    token = os.environ["TELEGRAM_BOT_TOKEN"]
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("poveste", poveste))
+    application.add_handler(CommandHandler("gluma", gluma))
+    application.add_handler(CommandHandler("curcubeu", curcubeu))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, raspuns))
 
-    app = ApplicationBuilder().token(token).build()
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-
-    print("PaulBot rulează...")
-    app.run_polling()
+    application.run_polling()
