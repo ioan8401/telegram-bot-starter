@@ -6,7 +6,7 @@ from telegram.ext import (
     ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 )
 
-# Setare API Key din Railway (variabilă de mediu)
+# API key OpenAI
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 # Mesaje predefinite
@@ -36,7 +36,6 @@ STICKERE = [
 ]
 
 # Comenzi
-
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "Bunăăă! Eu sunt Unicornella, prietena ta magică! Scrie-mi orice sau încearcă /poveste, /gluma, /curcubeu sau /intreaba"
@@ -73,17 +72,22 @@ async def intreaba(update: Update, context: ContextTypes.DEFAULT_TYPE):
         raspuns = response.choices[0].message.content
         await update.message.reply_text(raspuns)
     except Exception as e:
-        await update.message.reply_text("Magia unicornului e puțin încurcată acum. Încearcă din nou mai târziu.")
+        await update.message.reply_text(f"Magia unicornului e puțin încurcată: {str(e)}")
 
-# Pornirea aplicației
+# Pornire aplicație
 if __name__ == '__main__':
-    application = ApplicationBuilder().token(os.environ["TELEGRAM_BOT_TOKEN"]).build()
+    TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+    if not TOKEN:
+        print("EROARE: TOKEN lipsă.")
+    else:
+        app = ApplicationBuilder().token(TOKEN).build()
 
-    application.add_handler(CommandHandler("start", start))
-    application.add_handler(CommandHandler("poveste", poveste))
-    application.add_handler(CommandHandler("gluma", gluma))
-    application.add_handler(CommandHandler("curcubeu", curcubeu))
-    application.add_handler(CommandHandler("intreaba", intreaba))
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, raspuns))
+        app.add_handler(CommandHandler("start", start))
+        app.add_handler(CommandHandler("poveste", poveste))
+        app.add_handler(CommandHandler("gluma", gluma))
+        app.add_handler(CommandHandler("curcubeu", curcubeu))
+        app.add_handler(CommandHandler("intreaba", intreaba))
+        app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, raspuns))
 
-    application.run_polling()
+        print("Botul pornește...")
+        app.run_polling()
