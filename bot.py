@@ -1,8 +1,13 @@
 import os
+import random
+import openai
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
-import random
 
+# Inițializare API OpenAI
+openai.api_key = os.environ["OPENAI_API_KEY"]
+
+# Răspunsuri predefinite
 REPLICI_UNICORN = [
     "Hei, mică prințesă! Vrei să vorbim despre curcubeie?",
     "Știai că astăzi unicornul Rozalia a zburat peste pădurea de vată de zahăr?",
@@ -24,16 +29,29 @@ GLUME = [
 ]
 
 STICKERE = [
-    "CAACAgIAAxkBAAEEDWxmVuOVh2Z6MHmpOWqMeNZB4DiHRAACXgADVp29CqgoqbgkQ9TgMAQ",  # Unicorn sticker
-    "CAACAgUAAxkBAAEEEVZmVxXeZIgLUzYo88a8I2V6A3whgAACFQMAAvcCyFbSKC4lST7uwDAE",  # Cute unicorn
+    "CAACAgIAAxkBAAEEDWxmVuOVh2Z6MHmpOWqMeNZB4DiHRAACXgADVp29CqgoqbgkQ9TgMAQ",
+    "CAACAgUAAxkBAAEEEVZmVxXeZIgLUzYo88a8I2V6A3whgAACFQMAAvcCyFbSKC4lST7uwDAE",
 ]
 
+# Integrare GPT
+async def chatgpt_raspuns(text):
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "Ești Unicornella, un unicorn magic, prietenos și iubitor de curcubeie. Răspunzi cu imaginație, glume și bucurie copiilor."},
+                {"role": "user", "content": text},
+            ],
+            max_tokens=150,
+            temperature=0.9,
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        return "Ups! Magia s-a întrerupt. Mai încearcă puțin mai târziu!"
+
+# Comenzi
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Bunăăă! Eu sunt Unicornella, prietena ta magică! Scrie-mi orice sau încearcă /poveste, /gluma sau /curcubeu")
-
-async def raspuns(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    mesaj = random.choice(REPLICI_UNICORN)
-    await update.message.reply_text(mesaj)
 
 async def poveste(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(POVESTE)
@@ -45,6 +63,12 @@ async def curcubeu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_sticker(random.choice(STICKERE))
     await update.message.reply_text("Uuuu! Un curcubeu magic a apărut pentru tine!")
 
+async def raspuns(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_text = update.message.text
+    mesaj = await chatgpt_raspuns(user_text)
+    await update.message.reply_text(mesaj)
+
+# Pornire aplicație
 if __name__ == '__main__':
     application = ApplicationBuilder().token(os.environ["TELEGRAM_BOT_TOKEN"]).build()
 
