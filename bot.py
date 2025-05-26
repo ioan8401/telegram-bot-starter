@@ -3,7 +3,7 @@ import openai
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filters
 
-TELEGRAM_TOKEN = "7384086918:AAGhlvZZ1DEHKmFexe0-97xXkp8pBcpl1_c"
+TELEGRAM_TOKEN = "7384086918:AAH8mJLsd62XsH0EQf9NPfL71NzfTJ81srU"
 OPENAI_API_KEY = "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"
 
 # Setare cheie OpenAI
