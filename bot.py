@@ -6,8 +6,8 @@ from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filte
 TELEGRAM_TOKEN = "7384086918:AAH8mJLsd62XsH0EQf9NPfL71NzfTJ81srU"
 OPENAI_API_KEY = "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"
 
-# Setare cheie OpenAI
-openai.api_key = OPENAI_API_KEY
+# Client OpenAI modern
+client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
 # Logging (opțional)
 logging.basicConfig(
@@ -18,7 +18,7 @@ logging.basicConfig(
 # Funcție care trimite mesajul la OpenAI și returnează răspunsul
 async def ask_openai(prompt: str) -> str:
     try:
-        response = openai.ChatCompletion.create(
+        response = await client.chat.completions.create(
             model="gpt-4",
             messages=[
                 {"role": "system", "content": "Răspunde ca un prieten cu inteligență artificială pe nume Rozela. Ești caldă, amuzantă, dar empatică."},
@@ -26,7 +26,7 @@ async def ask_openai(prompt: str) -> str:
             ],
             temperature=0.7
         )
-        return response['choices'][0]['message']['content'].strip()
+        return response.choices[0].message.content.strip()
     except Exception as e:
         return f"Eroare OpenAI: {e}"
 
