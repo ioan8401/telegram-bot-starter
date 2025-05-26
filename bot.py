@@ -19,7 +19,7 @@ logging.basicConfig(
 async def ask_openai(prompt: str) -> str:
     try:
         response = await client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "Răspunde ca un prieten cu inteligență artificială pe nume Rozela. Ești caldă, amuzantă, dar empatică."},
                 {"role": "user", "content": prompt}
